@@ -1,0 +1,66 @@
+# Virtual environment
+venv/
+.venv/
+
+# Environment config (secrets)
+config/.env
+
+# GCP credentials
+service-account*.json
+credentials*.json
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated data (not source code)
+data/
+logs/
+.artifacts/
+
+# Terraform state
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
+infra/terraform/*.tfplan
+infra/terraform/.terraform.lock.hcl
+
+# dbt
+data_engineering/dbt/target/
+data_engineering/dbt/dbt_packages/
+data_engineering/dbt/logs/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS — never commit these
+.DS_Store
+.AppleDouble
+**/.DS_Store
+
+# Archives — never commit zip files
+*.zip
+
+# ChromaDB
+.artifacts/chromadb/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Certs
+*.pem
+*.key
+*.crt
