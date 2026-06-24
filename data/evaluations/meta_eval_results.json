@@ -1,52 +1,63 @@
 {
   "per_agent": [
     {
-      "agent_id": "mortgage-faq-agent",
+      "agent_id": "agt-mortgage-faq-001",
       "expected_defect": "hallucination",
-      "finding_dimensions": [],
-      "detected": false,
-      "tp": 0,
-      "fn": 1
+      "finding_dimensions": [
+        "hallucination"
+      ],
+      "detected": true,
+      "tp": 1,
+      "fn": 0
     },
     {
-      "agent_id": "kyc-summary-agent",
+      "agent_id": "agt-kyc-summary-001",
       "expected_defect": "reliability",
-      "finding_dimensions": [],
-      "detected": false,
-      "tp": 0,
-      "fn": 1
+      "finding_dimensions": [
+        "reliability"
+      ],
+      "detected": true,
+      "tp": 1,
+      "fn": 0
     },
     {
-      "agent_id": "lending-decision-agent",
+      "agent_id": "agt-lending-decision-001",
       "expected_defect": "bias",
-      "finding_dimensions": [],
-      "detected": false,
-      "tp": 0,
-      "fn": 1
+      "finding_dimensions": [
+        "bias"
+      ],
+      "detected": true,
+      "tp": 1,
+      "fn": 0
     },
     {
-      "agent_id": "fx-posttrade-agent",
+      "agent_id": "agt-fx-posttrade-001",
       "expected_defect": "drift",
-      "finding_dimensions": [],
-      "detected": false,
-      "tp": 0,
-      "fn": 1
+      "finding_dimensions": [
+        "drift"
+      ],
+      "detected": true,
+      "tp": 1,
+      "fn": 0
     },
     {
-      "agent_id": "compliance-qa-agent",
+      "agent_id": "agt-compliance-qa-001",
       "expected_defect": "robustness",
-      "finding_dimensions": [],
-      "detected": false,
-      "tp": 0,
-      "fn": 1
+      "finding_dimensions": [
+        "robustness",
+        "reliability"
+      ],
+      "detected": true,
+      "tp": 1,
+      "fn": 0
     }
   ],
-  "tp": 0,
-  "fp": 6,
-  "fn": 5,
-  "precision": 0.0,
-  "recall": 0.0,
-  "f1": 0.0,
+  "tp": 5,
+  "fp": 1,
+  "fn": 0,
+  "precision": 0.8333,
+  "recall": 1.0,
+  "f1": 0.9091,
   "agents_evaluated": 5,
-  "agents_detected": 0
+  "agents_detected": 5
 }
