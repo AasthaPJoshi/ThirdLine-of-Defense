@@ -64,3 +64,6 @@ frontend/.env
 *.pem
 *.key
 *.crt
+venv/
+__pycache__/
+.DS_Store
