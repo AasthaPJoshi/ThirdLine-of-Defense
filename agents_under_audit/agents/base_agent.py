@@ -166,7 +166,7 @@ class BaseAgent(ABC):
         )
         self._output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Initialise Gemini client
+        # Initialise LLM client (GPT-4o-mini via OpenAI)
         self._llm = self._init_llm()
 
         logger.info(
@@ -208,15 +208,23 @@ class BaseAgent(ABC):
     # ── LLM initialisation ────────────────────────────────────────────────────
     def _init_llm(self):
         """
-        Initialise LLM client. Uses OpenAI GPT-4o-mini if key available,
-        otherwise falls back to mock mode for offline testing.
+        Initialise the LLM client for agent responses.
+        Priority: OpenAI (GPT-4o-mini) -> mock mode.
+
+        GPT-4o-mini is used for all 5 synthetic bank agents.
+        The system prompt is injected as the OpenAI system message.
         """
         openai_key = getattr(settings, "OPENAI_API_KEY", "")
         if openai_key and openai_key not in ("", "your-openai-api-key"):
             try:
                 from openai import OpenAI
                 client = OpenAI(api_key=openai_key)
-                logger.info("agent_llm_ready", agent=self.agent_id, provider="openai", model="gpt-4o-mini")
+                logger.info(
+                    "agent_llm_ready",
+                    agent=self.agent_id,
+                    provider="openai",
+                    model="gpt-4o-mini",
+                )
                 return client
             except Exception as e:
                 logger.warning("openai_init_failed_using_mock", error=str(e))
@@ -383,13 +391,11 @@ class BaseAgent(ABC):
     )
     def _call_llm(self, prompt: str, log) -> str:
         """
-        Call the LLM with retry logic. Returns the output string.
-
-        If no LLM client (offline mode), returns a plausible mock response
-        so the pipeline can still run end-to-end without API keys.
+        Call GPT-4o-mini with retry logic. Returns the output string.
+        Falls back to mock response if no OpenAI key is configured.
+        System prompt is injected as the OpenAI system role message.
         """
         if self._llm is None:
-            # Mock response for offline development
             return self._mock_response(prompt)
 
         response = self._llm.chat.completions.create(
@@ -405,8 +411,8 @@ class BaseAgent(ABC):
 
     def _mock_response(self, prompt: str) -> str:
         """
-        Return a plausible but generic mock response for offline testing.
-        Subclasses can override for more realistic mocks.
+        Plausible mock response for offline testing (no API key needed).
+        Subclasses override with domain-specific mock text.
         """
         return (
             f"[MOCK — set OPENAI_API_KEY in config/.env for real responses] "

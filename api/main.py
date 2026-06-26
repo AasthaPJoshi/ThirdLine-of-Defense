@@ -563,3 +563,131 @@ def get_metrics():
         ledger_intact=_verify_ledger(ledger),
         last_run_id=run.get("run_id"),
     )
+
+
+# ── New endpoints for Week 1 features ─────────────────────────────────────────
+
+@app.post("/api/v1/shield/check")
+def shield_check(body: dict):
+    """Test ThirdLine Shield on a prompt."""
+    import sys
+    sys.path.insert(0, str(Path(__file__).parents[1]))
+    from thirdline_shield.shield import ThirdLineShield
+    import uuid
+    agent_id   = body.get("agent_id", "agt-test-001")
+    prompt     = body.get("prompt", "")
+    session_id = body.get("session_id", str(uuid.uuid4()))
+    shield = ThirdLineShield(agent_id)
+    result = shield.check_input(prompt, session_id)
+    return result.to_dict()
+
+
+@app.get("/api/v1/shield/stats")
+def shield_stats():
+    """Return Shield statistics across all agents."""
+    from thirdline_shield.shield import shield_fleet
+    return shield_fleet.fleet_stats()
+
+
+@app.post("/api/v1/validate-validator")
+def validate_validator():
+    """Run ThirdLine's self-audit."""
+    from governance.validate_validator import ValidateValidator
+    vv     = ValidateValidator()
+    report = vv.run()
+    return report
+
+
+@app.post("/api/v1/examiner-pack")
+def generate_examiner_pack():
+    """Generate examiner-ready audit evidence package."""
+    from examiner_pack.generator import ExaminerPackGenerator
+    gen   = ExaminerPackGenerator()
+    paths = gen.generate()
+    return {"status": "generated", "paths": {k: str(v) for k, v in paths.items()}}
+
+
+# ── Week 2 + Week 3 endpoints ──────────────────────────────────────────────────
+
+@app.post("/api/v1/copilot/ask")
+def copilot_ask(body: dict):
+    """AuditCopilot — natural language audit interface."""
+    from audit_copilot.copilot import AuditCopilot
+    question = body.get("question", "")
+    if not question:
+        raise HTTPException(status_code=400, detail="question is required")
+    copilot = AuditCopilot()
+    answer  = copilot.ask(question)
+    return answer.to_dict()
+
+
+@app.get("/api/v1/ccm/status")
+def ccm_status():
+    """Return CCM monitoring status."""
+    from ccm.monitor import ContinuousControlsMonitor
+    monitor = ContinuousControlsMonitor()
+    return monitor.get_status()
+
+
+@app.post("/api/v1/ccm/trigger")
+def ccm_trigger(body: dict):
+    """Manually trigger a CCM re-audit for an agent."""
+    from ccm.monitor import ContinuousControlsMonitor
+    agent_id = body.get("agent_id", "all")
+    monitor  = ContinuousControlsMonitor()
+    if agent_id == "all":
+        monitor._run_full_audit("api_trigger")
+        return {"status": "triggered", "agent_id": "all"}
+    else:
+        result = monitor.trigger_agent_audit(agent_id, reason="api_trigger")
+        return {"status": "triggered", "agent_id": agent_id, "findings": len(result.get("findings",[]))}
+
+
+@app.post("/api/v1/regulatory-radar/scan")
+def regulatory_radar_scan():
+    """Scan regulatory sources for new AI governance guidance."""
+    from regulatory_radar.radar import RegulatoryRadar
+    radar  = RegulatoryRadar()
+    alerts = radar.scan()
+    return {
+        "alerts_generated": len(alerts),
+        "alerts": [a.to_dict() for a in alerts],
+    }
+
+
+@app.get("/api/v1/regulatory-radar/alerts")
+def regulatory_radar_alerts():
+    """Return all stored regulatory alerts."""
+    from regulatory_radar.radar import RegulatoryRadar
+    radar = RegulatoryRadar()
+    return {"alerts": radar.get_alerts()}
+
+
+@app.post("/api/v1/pipeline-audit/run")
+def pipeline_audit_run():
+    """Run data pipeline audit across all agents."""
+    from data_pipeline_auditor.auditor import DataPipelineAuditor
+    auditor = DataPipelineAuditor()
+    results = auditor.run_fleet_audit()
+    return {
+        "agents_audited": len(results),
+        "results": [r.to_dict() for r in results],
+    }
+
+
+@app.get("/api/v1/knowledge-graph/report")
+def knowledge_graph_report():
+    """Return systemic risk report from the knowledge graph."""
+    from knowledge_graph.graph import ThirdLineKnowledgeGraph
+    graph  = ThirdLineKnowledgeGraph()
+    graph.build()
+    return graph.get_systemic_risk_report()
+
+
+@app.get("/api/v1/knowledge-graph/query")
+def knowledge_graph_query(q: str = Query("systemic risk overview")):
+    """Query the knowledge graph with a natural language question."""
+    from knowledge_graph.graph import ThirdLineKnowledgeGraph
+    graph  = ThirdLineKnowledgeGraph()
+    graph.build()
+    return graph.query(q)
