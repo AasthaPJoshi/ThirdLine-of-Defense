@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/da9dfa50-f1f9-4b54-afb4-e8a3bf433496
+
 <div align="center">
 
 # ThirdLine
@@ -26,6 +30,8 @@ Banks are deploying hundreds of AI agents into production: mortgage advisors, KY
 Traditional model risk frameworks were built for statistical models, not for GPT-4o agents that reason, retrieve, and act. Internal audit teams have no tooling. Regulators have no playbook yet. The governance gap is real, growing, and it opened in April 2026.
 
 ThirdLine is the answer: **an AI system that autonomously audits other AI systems**, detecting failures, mapping them to regulatory controls, enforcing human sign-off, and producing examiner-ready evidence.
+
+https://github.com/user-attachments/assets/f62fff39-8e87-4707-888a-b0af8a95c472
 
 ---
 
