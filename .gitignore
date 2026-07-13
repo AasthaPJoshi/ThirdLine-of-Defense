@@ -72,3 +72,4 @@ data/
 *.mov
 how to run.txt
 video_audio.txt
+.env
