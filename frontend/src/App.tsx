@@ -160,6 +160,11 @@ function Topbar({ title }:{ title:string }) {
         <span className="text-white font-semibold">{title}</span>
       </div>
       <div className="flex items-center gap-2">
+        {USE_MOCK && (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-yellow-500/10 border border-yellow-500/30 rounded-md text-[11px] text-yellow-400 font-semibold">
+            LIVE DEMO · Sample Data — Connect your backend to run live
+          </div>
+        )}
         <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#0F1F38] border border-[#1A2E4A] rounded-md text-[11px] text-slate-400">
           <Activity size={9} className="text-emerald-400" />Live
         </div>
@@ -337,11 +342,13 @@ function ReviewQueuePage() {
   const load = useCallback(() => { setLoading(true); get<QueueItem[]>('/review-queue').then(setItems).finally(()=>setLoading(false)) },[])
   useEffect(()=>{ load() },[load])
   const approve = async (id:string) => {
+    if (USE_MOCK) { setToast({msg:'This is a fully functional workflow — connect your backend and API keys to execute it live.',type:'error'}); return }
     setActing(id)
     try { await post(`/review-queue/${id}/approve`,{reviewer,comment}); setToast({msg:'Finding approved and recorded in ledger.',type:'success'}); setComment(''); setExpanded(null); load() }
     catch { setToast({msg:'Error approving finding.',type:'error'}) } finally { setActing(null) }
   }
   const reject = async (id:string) => {
+    if (USE_MOCK) { setToast({msg:'This is a fully functional workflow — connect your backend and API keys to execute it live.',type:'error'}); return }
     if (!comment.trim()) { setToast({msg:'Comment required to reject.',type:'error'}); return }
     setActing(id)
     try { await post(`/review-queue/${id}/reject`,{reviewer,comment}); setToast({msg:'Finding rejected.',type:'success'}); setComment(''); setExpanded(null); load() }
