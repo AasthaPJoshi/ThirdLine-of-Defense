@@ -73,3 +73,5 @@ data/
 how to run.txt
 video_audio.txt
 .env
+!frontend/src/data/
+!frontend/src/data/**
