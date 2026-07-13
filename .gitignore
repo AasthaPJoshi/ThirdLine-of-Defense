@@ -69,3 +69,6 @@ __pycache__/
 .DS_Store
 venv/
 data/
+*.mov
+how to run.txt
+video_audio.txt
