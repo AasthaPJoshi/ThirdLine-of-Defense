@@ -39,7 +39,7 @@ export const api = {
 
   getAgent: (id: string) =>
     USE_MOCK
-      ? Promise.resolve(mockAgents.find(a => a.agent_id === id) as Agent)
+      ? Promise.resolve(mockAgents.find((a: Agent) => a.agent_id === id) as Agent)
       : get<Agent>(`/agents/${id}`),
 
   getFindings: () =>
