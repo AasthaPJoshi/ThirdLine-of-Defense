@@ -5,6 +5,7 @@ import {
   Shield, Activity, ChevronRight, ChevronDown, ChevronUp,
   CheckCircle2, XCircle, AlertTriangle, Lock, Eye, FileText
 } from 'lucide-react'
+import { mockAgents, mockFindings, mockQueue, mockLedger, mockMetrics } from './data/mockData'
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
 interface Agent { agent_id:string; name:string; business_line:string; materiality_tier:string; interaction_count:number; finding_count:number; highest_severity:string|null; risk_color:string; dimensions_failed:string[]; last_audited:string|null }
@@ -14,8 +15,32 @@ interface LedgerEntry { seq:number; finding_id:string; agent_id:string; event_ty
 interface Metrics { f1:number; precision:number; recall:number; true_positives:number; false_positives:number; false_negatives:number; agents_evaluated:number; agents_detected:number; total_findings:number; total_interactions:number; findings_by_severity:Record<string,number>; ledger_intact:boolean; last_run_id:string|null }
 
 /* ── API ────────────────────────────────────────────────────────────────────── */
-const get = async <T,>(path: string): Promise<T> => { const r = await fetch(`/api/v1${path}`); if (!r.ok) throw new Error(`${r.status}`); return r.json() }
-const post = async <T,>(path: string, body: object): Promise<T> => { const r = await fetch(`/api/v1${path}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }); if (!r.ok) throw new Error(`${r.status}`); return r.json() }
+const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true'
+const MOCK_ROUTES: Record<string, any> = {
+  '/agents': mockAgents,
+  '/findings': mockFindings,
+  '/review-queue': mockQueue,
+  '/ledger': mockLedger,
+  '/metrics': mockMetrics,
+}
+const get = async <T,>(path: string): Promise<T> => {
+  if (USE_MOCK) {
+    const base = path.split('?')[0]
+    if (base.startsWith('/agents/')) {
+      const id = base.split('/agents/')[1]
+      const agent = mockAgents.find(a => a.agent_id === id)
+      if (agent) return { ...agent, dimension_scores: {}, findings: [] } as unknown as T
+    }
+    if (MOCK_ROUTES[base] !== undefined) return MOCK_ROUTES[base] as T
+  }
+  const r = await fetch(`/api/v1${path}`); if (!r.ok) throw new Error(`${r.status}`); return r.json()
+}
+const post = async <T,>(path: string, body: object): Promise<T> => {
+  if (USE_MOCK) {
+    return { status: path.includes('/approve') ? 'APPROVED' : 'REJECTED', ...body, note: 'Demo mode: not persisted' } as unknown as T
+  }
+  const r = await fetch(`/api/v1${path}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) }); if (!r.ok) throw new Error(`${r.status}`); return r.json()
+}
 
 /* ── Severity colours ──────────────────────────────────────────────────────── */
 const SEV_TEXT:Record<string,string> = { CRITICAL:'text-red-400', HIGH:'text-orange-400', MEDIUM:'text-yellow-400', LOW:'text-blue-400' }
