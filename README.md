@@ -1,6 +1,3 @@
-
-
-
 <div align="center">
 
 # ThirdLine  
@@ -13,6 +10,10 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev)
 [![GCP](https://img.shields.io/badge/GCP-BigQuery%20·%20Vertex%20AI%20·%20Cloud%20Run-4285F4?style=flat&logo=googlecloud&logoColor=white)](https://cloud.google.com)
 [![OpenAI](https://img.shields.io/badge/GPT--4o--mini-Judge%20+%20Agents-412991?style=flat&logo=openai&logoColor=white)](https://openai.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-third--line--of--defense.vercel.app-000000?style=flat&logo=vercel&logoColor=white)](https://third-line-of-defense.vercel.app/)
+
+**[→ Try the live dashboard](https://third-line-of-defense.vercel.app/)**
+*Runs on mock data for this static deployment — the review queue, ledger, and metrics shown are sample data illustrating the real workflow. The actual audit pipeline (orchestrator, evaluation engine, HITL enforcement, hash-chained ledger) runs against live GCP/BigQuery infrastructure and GPT-4o-mini when self-hosted with real API keys — see [Quick Start](#quick-start).*
 
 </div>
 
@@ -265,6 +266,12 @@ ThirdLine/
   .github/workflows/      CI/CD with eval-as-test quality gate
   diagrams/               Architecture and flow diagrams
 ```
+
+---
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details. Free to use, fork, and build on, with attribution.
 
 ---
 
