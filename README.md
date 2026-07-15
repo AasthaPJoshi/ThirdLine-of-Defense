@@ -3,7 +3,7 @@
 # ThirdLine  
 ### Agentic AI Audit and Governance Platform  
 
-*The Third Line of Defense for the era of AI agents.*
+*The Third Line of Defense for the era of AI agents.* 
 
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
